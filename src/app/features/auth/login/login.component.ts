@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -12,13 +13,15 @@ import { ButtonComponent } from '../../../shared/components/button/button.compon
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+  private authService = inject(AuthService);
+
   loginForm: FormGroup;
   loading = false;
+  errorMessage = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router
-  ) {
+  constructor() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -28,12 +31,20 @@ export class LoginComponent {
   onSubmit(): void {
     if (this.loginForm.valid) {
       this.loading = true;
-      // Simulate login
-      setTimeout(() => {
-        this.loading = false;
-        console.log('Login successful', this.loginForm.value);
-        this.router.navigate(['/']);
-      }, 1500);
+      this.errorMessage = '';
+
+      const { email, password } = this.loginForm.value;
+
+      this.authService.login(email, password).subscribe({
+        next: () => {
+          this.loading = false;
+          this.router.navigate(['/']);
+        },
+        error: (error) => {
+          this.loading = false;
+          this.errorMessage = 'Login failed. Please try again.';
+        }
+      });
     }
   }
 

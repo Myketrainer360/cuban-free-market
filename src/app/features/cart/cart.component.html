@@ -1,0 +1,103 @@
+<div class="cart-page">
+  <div class="container">
+    <h1>Shopping Cart</h1>
+
+    @if (cartService.totalItems() === 0) {
+      <div class="empty-cart">
+        <div class="empty-icon">🛒</div>
+        <h2>Your cart is empty</h2>
+        <p>Add some products to get started!</p>
+        <app-button [routerLink]="['/marketplace']" variant="primary" size="lg">
+          Browse Marketplace
+        </app-button>
+      </div>
+    } @else {
+      <div class="cart-content">
+        <div class="cart-items">
+          @for (item of cartService.items(); track item.product.id) {
+            <div class="cart-item">
+              <div class="item-image">
+                @if (item.product.images && item.product.images.length > 0) {
+                  <img [src]="item.product.images[0]" [alt]="item.product.title">
+                } @else {
+                  <div class="placeholder">📦</div>
+                }
+              </div>
+
+              <div class="item-details">
+                <h3>{{ item.product.title }}</h3>
+                <p class="location">📍 {{ item.product.location }}</p>
+                <p class="price">{{ item.product.price | currencyFormat:item.product.currency }}</p>
+              </div>
+
+              <div class="item-quantity">
+                <button
+                  class="qty-btn"
+                  (click)="updateQuantity(item.product.id, item.quantity - 1)"
+                  [disabled]="item.quantity <= 1">
+                  -
+                </button>
+                <span class="qty">{{ item.quantity }}</span>
+                <button
+                  class="qty-btn"
+                  (click)="updateQuantity(item.product.id, item.quantity + 1)">
+                  +
+                </button>
+              </div>
+
+              <div class="item-total">
+                <p class="total-price">
+                  {{ (item.product.price * item.quantity) | currencyFormat:item.product.currency }}
+                </p>
+                <button class="remove-btn" (click)="removeItem(item.product.id)">
+                  🗑️ Remove
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="cart-summary">
+          <h2>Order Summary</h2>
+
+          <div class="summary-row">
+            <span>Items ({{ cartService.totalItems() }})</span>
+            <span>{{ cartService.totalPrice() | currencyFormat:cartService.cart().currency }}</span>
+          </div>
+
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span class="free">Free</span>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-row total">
+            <span>Total</span>
+            <span>{{ cartService.totalPrice() | currencyFormat:cartService.cart().currency }}</span>
+          </div>
+
+          <app-button
+            variant="primary"
+            size="lg"
+            class="checkout-btn"
+            (onClick)="proceedToCheckout()">
+            Proceed to Checkout
+          </app-button>
+
+          <app-button
+            variant="outline"
+            size="md"
+            class="continue-btn"
+            [routerLink]="['/marketplace']">
+            Continue Shopping
+          </app-button>
+
+          <button class="clear-cart-btn" (click)="clearCart()">
+            Clear Cart
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

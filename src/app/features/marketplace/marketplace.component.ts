@@ -1,18 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { ButtonComponent } from '../../shared/components/button/button.component';
 import { CurrencyFormatPipe } from '../../shared/pipes/currency-format.pipe';
 import { TimeAgoPipe } from '../../shared/pipes/time-ago.pipe';
 import { Product } from '../../core/models/product.model';
+import { ProductService } from '../../core/services/product.service';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-marketplace',
   standalone: true,
-  imports: [CommonModule, LoadingComponent, CurrencyFormatPipe, TimeAgoPipe],
+  imports: [CommonModule, LoadingComponent, ButtonComponent, CurrencyFormatPipe, TimeAgoPipe],
   templateUrl: './marketplace.component.html',
   styleUrl: './marketplace.component.css'
 })
 export class MarketplaceComponent implements OnInit {
+  private productService = inject(ProductService);
+  cartService = inject(CartService);
+
   products: Product[] = [];
   loading = false;
 
@@ -22,43 +28,23 @@ export class MarketplaceComponent implements OnInit {
 
   loadProducts(): void {
     this.loading = true;
-    // Simulate API call with mock data
-    setTimeout(() => {
-      this.products = this.getMockProducts();
-      this.loading = false;
-    }, 1000);
+    this.productService.getProducts().subscribe({
+      next: (products) => {
+        this.products = products;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      }
+    });
   }
 
-  private getMockProducts(): Product[] {
-    return [
-      {
-        id: '1',
-        title: 'iPhone 13 Pro',
-        description: 'Like new, 256GB',
-        price: 800,
-        currency: 'USD',
-        category: 'ELECTRONICS' as any,
-        images: [],
-        sellerId: '1',
-        status: 'AVAILABLE' as any,
-        location: 'Havana',
-        createdAt: new Date('2025-10-20'),
-        updatedAt: new Date('2025-10-20')
-      },
-      {
-        id: '2',
-        title: 'Casa in Vedado',
-        description: '3 bedrooms, 2 bathrooms',
-        price: 50000,
-        currency: 'USD',
-        category: 'REAL_ESTATE' as any,
-        images: [],
-        sellerId: '2',
-        status: 'AVAILABLE' as any,
-        location: 'Havana',
-        createdAt: new Date('2025-10-15'),
-        updatedAt: new Date('2025-10-15')
-      }
-    ];
+  addToCart(product: Product): void {
+    this.cartService.addToCart(product);
+    alert(`${product.title} added to cart!`);
+  }
+
+  isInCart(productId: string): boolean {
+    return this.cartService.isInCart(productId);
   }
 }

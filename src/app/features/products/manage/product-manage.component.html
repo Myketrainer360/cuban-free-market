@@ -1,0 +1,94 @@
+<div class="manage-page">
+  <div class="container">
+    <div class="page-header">
+      <h1>My Products</h1>
+      <app-button variant="primary" size="lg" (onClick)="addProduct()">
+        + Add Product
+      </app-button>
+    </div>
+
+    <app-loading *ngIf="loading" message="Loading your products..." />
+
+    @if (!loading) {
+      @if (products.length === 0) {
+        <div class="empty-state">
+          <div class="empty-icon">📦</div>
+          <h2>No products yet</h2>
+          <p>Start selling by adding your first product!</p>
+          <app-button variant="primary" size="lg" (onClick)="addProduct()">
+            Add Your First Product
+          </app-button>
+        </div>
+      } @else {
+        <div class="products-table">
+          <div class="table-header">
+            <div class="col-product">Product</div>
+            <div class="col-price">Price</div>
+            <div class="col-status">Status</div>
+            <div class="col-date">Created</div>
+            <div class="col-actions">Actions</div>
+          </div>
+
+          @for (product of products; track product.id) {
+            <div class="table-row">
+              <div class="col-product">
+                <div class="product-info">
+                  @if (product.images && product.images.length > 0) {
+                    <img [src]="product.images[0]" [alt]="product.title" class="product-thumb">
+                  } @else {
+                    <div class="product-thumb placeholder">📦</div>
+                  }
+                  <div class="product-details">
+                    <h3>{{ product.title }}</h3>
+                    <p>{{ product.description | slice:0:50 }}...</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-price">
+                {{ product.price | currencyFormat:product.currency }}
+              </div>
+
+              <div class="col-status">
+                <span class="status-badge" [class]="'status-' + product.status.toLowerCase()">
+                  {{ product.status }}
+                </span>
+              </div>
+
+              <div class="col-date">
+                {{ product.createdAt | timeAgo }}
+              </div>
+
+              <div class="col-actions">
+                <div class="action-buttons">
+                  <button
+                    class="btn-toggle"
+                    (click)="toggleStatus(product)"
+                    [title]="product.status === ProductStatus.AVAILABLE ? 'Deactivate' : 'Activate'">
+                    {{ product.status === ProductStatus.AVAILABLE ? '👁️' : '🔒' }}
+                  </button>
+                  <button
+                    class="btn-edit"
+                    (click)="editProduct(product.id)"
+                    title="Edit">
+                    ✏️
+                  </button>
+                  <button
+                    class="btn-delete"
+                    (click)="deleteProduct(product.id)"
+                    title="Delete">
+                    🗑️
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="summary">
+          <p>Total products: <strong>{{ products.length }}</strong></p>
+        </div>
+      }
+    }
+  </div>
+</div>

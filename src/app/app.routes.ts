@@ -16,6 +16,25 @@ export const routes: Routes = [
         loadComponent: () => import('./features/marketplace/marketplace.component').then(m => m.MarketplaceComponent)
       },
       {
+        path: 'cart',
+        loadComponent: () => import('./features/cart/cart.component').then(m => m.CartComponent)
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent),
+        canActivate: [authGuard]
+      },
+      {
+        path: 'products',
+        children: [
+          {
+            path: 'manage',
+            loadComponent: () => import('./features/products/manage/product-manage.component').then(m => m.ProductManageComponent),
+            canActivate: [authGuard]
+          }
+        ]
+      },
+      {
         path: 'auth',
         children: [
           {

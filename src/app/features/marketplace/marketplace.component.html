@@ -7,7 +7,11 @@
     <div class="products-grid" *ngIf="!loading">
       <div class="product-card" *ngFor="let product of products">
         <div class="product-image">
-          <div class="placeholder-image">📦</div>
+          @if (product.images && product.images.length > 0) {
+            <img [src]="product.images[0]" [alt]="product.title">
+          } @else {
+            <div class="placeholder-image">📦</div>
+          }
         </div>
         <div class="product-details">
           <h3>{{ product.title }}</h3>
@@ -15,6 +19,15 @@
           <p class="price">{{ product.price | currencyFormat:product.currency }}</p>
           <p class="location">📍 {{ product.location }}</p>
           <p class="date">{{ product.createdAt | timeAgo }}</p>
+
+          <app-button
+            [variant]="isInCart(product.id) ? 'secondary' : 'primary'"
+            size="md"
+            class="add-to-cart-btn"
+            (onClick)="addToCart(product)"
+            [disabled]="isInCart(product.id)">
+            {{ isInCart(product.id) ? '✓ In Cart' : '🛒 Add to Cart' }}
+          </app-button>
         </div>
       </div>
     </div>

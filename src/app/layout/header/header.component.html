@@ -8,14 +8,29 @@
       <nav class="nav" [class.active]="isMenuOpen">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
         <a routerLink="/marketplace" routerLinkActive="active">Marketplace</a>
-        <a routerLink="/auth/login" routerLinkActive="active">Login</a>
+
+        @if (authService.authenticated()) {
+          <a routerLink="/products/manage" routerLinkActive="active">My Products</a>
+          <a routerLink="/profile" routerLinkActive="active">Profile</a>
+        } @else {
+          <a routerLink="/auth/login" routerLinkActive="active">Login</a>
+        }
       </nav>
 
-      <button class="menu-toggle" (click)="toggleMenu()" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+      <div class="header-actions">
+        <a routerLink="/cart" class="cart-icon" routerLinkActive="active">
+          🛒
+          @if (cartService.totalItems() > 0) {
+            <span class="cart-badge">{{ cartService.totalItems() }}</span>
+          }
+        </a>
+
+        <button class="menu-toggle" (click)="toggleMenu()" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </div>
   </div>
 </header>
