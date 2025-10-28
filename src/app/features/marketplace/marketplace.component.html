@@ -1,0 +1,26 @@
+<div class="marketplace">
+  <div class="container">
+    <h1>Marketplace</h1>
+
+    <app-loading *ngIf="loading" message="Loading products..." />
+
+    <div class="products-grid" *ngIf="!loading">
+      <div class="product-card" *ngFor="let product of products">
+        <div class="product-image">
+          <div class="placeholder-image">📦</div>
+        </div>
+        <div class="product-details">
+          <h3>{{ product.title }}</h3>
+          <p class="description">{{ product.description }}</p>
+          <p class="price">{{ product.price | currencyFormat:product.currency }}</p>
+          <p class="location">📍 {{ product.location }}</p>
+          <p class="date">{{ product.createdAt | timeAgo }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && products.length === 0">
+      <p>No products found</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="home">
+  <div class="container">
+    <section class="hero">
+      <h1>Welcome to Cuban Free Market</h1>
+      <p class="subtitle">
+        Your platform for free trade and entrepreneurship in Cuba
+      </p>
+      <div class="cta-buttons">
+        <app-button
+          variant="primary"
+          size="lg"
+          (onClick)="onGetStarted()">
+          Get Started
+        </app-button>
+        <app-button
+          variant="outline"
+          size="lg"
+          [routerLink]="['/marketplace']">
+          Browse Marketplace
+        </app-button>
+      </div>
+    </section>
+
+    <section class="features">
+      <h2>Why Choose Us?</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>Free Market</h3>
+          <p>Trade freely without restrictions</p>
+        </div>
+        <div class="feature-card">
+          <h3>Secure Transactions</h3>
+          <p>Safe and reliable payment system</p>
+        </div>
+        <div class="feature-card">
+          <h3>Community Driven</h3>
+          <p>Built by Cubans, for Cubans</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

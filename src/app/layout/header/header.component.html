@@ -1,0 +1,21 @@
+<header class="header">
+  <div class="container">
+    <div class="header-content">
+      <a routerLink="/" class="logo">
+        <h1>Cuban Free Market</h1>
+      </a>
+
+      <nav class="nav" [class.active]="isMenuOpen">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+        <a routerLink="/marketplace" routerLinkActive="active">Marketplace</a>
+        <a routerLink="/auth/login" routerLinkActive="active">Login</a>
+      </nav>
+
+      <button class="menu-toggle" (click)="toggleMenu()" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>
